@@ -9,8 +9,9 @@ class bot:
         self.latestTweetFromPrevious = ''
         self.fileTypeDict = {}
         self.initializeFileType()
-        self.time_seconds = 0
         self.economydict = {"NFT":0, "DEFI":0, "METAVERSE":0, "POLKADOT":0, "Storage":0, "VR/AR":0}
+        self.tokendict = {}
+        
 
     def initializeFileType(self):  # Define file types for each file
         self.fileTypeDict["THETA"] = "NFT"
@@ -57,7 +58,7 @@ class bot:
 
 
     def loop(self):
-        start_time = time.time()
+        s_time = time.time()
         tweets = self.getTweets()
         #print(tweets)
         
@@ -70,9 +71,7 @@ class bot:
             self.checkTweet(tweets['data'][i]['text'])
 
         self.latestTweetFromPrevious = tweets['data'][0]['text']
-        print(self.economydict)
-        self.time_seconds += 10
-        while((time.time() - start_time) <= self.time_seconds):
+        while((time.time() - s_time) <= 10):
             pass
 
     def checkTweet(self, tweet):
@@ -82,8 +81,15 @@ class bot:
         #print(tweet_list)
         for word in tweet_list:
             #print(word)
-            if word[0] == '$' or word[0] == '@' or word[0] == '#':
+            if word[0] == '@' or word[0] == '#':
                 word = word[1:]
+            elif word[0] == '$':
+                word = word[1:]
+                try:
+                    int(word[:-1].replace(',', ''))
+                except ValueError:
+                    if word != '': #deal with just $
+                        self.tokendict[word.upper()] = self.tokendict.get(word.upper(), 0) +1
                 #print(word)
             elif word[0] == '(' and word[-1] == ')':
                 word = word[1:-2]
@@ -91,6 +97,7 @@ class bot:
             economy = self.getFileType(word)
             if economy is not None:
                 self.economydict[economy] = self.economydict.get(economy) + 1
+        
 
     def getFileType(self, word):
         #add some sort of loose string matching
@@ -112,9 +119,20 @@ class bot:
 
         return tweets
 
+    def print_lists(self):
+        print(self.economydict)
+        sorted_token_list = sorted(self.tokendict.items(), key=lambda x: x[1], reverse=True)
+        for i in range(20):
+            print(sorted_token_list[i])
+
 if __name__ == '__main__':
     botParser = bot()
     start_time = time.time()
-    while(True):
-        botParser.loop()
-        print("--- %s seconds ---" % (time.time() - start_time))
+    while((time.time() - start_time) < 28800):
+        current_time = time.time()
+        while((time.time() - current_time) < 900):
+            #print((time.time() - current_time))
+            botParser.loop()
+        botParser.print_lists()
+        #print("--- %s seconds ---" % (time.time() - start_time))
+        
