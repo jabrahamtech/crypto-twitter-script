@@ -1,6 +1,7 @@
 import requests
 import json
 import time
+from datetime import datetime
 
 
 class bot:
@@ -13,6 +14,8 @@ class bot:
         self.quarter_economydict = {"NFT":0, "DEFI":0, "METAVERSE":0, "POLKADOT":0, "Storage":0, "VR/AR":0}
         self.tokendict = {}
         self.token_15mins_dict = {}
+        self.time = datetime.now()
+        self.start_time = self.time.strftime("%H:%M:%S")
         
 
     def initializeFileType(self):  # Define file types for each file
@@ -125,26 +128,31 @@ class bot:
         return tweets
 
     def print_lists(self):
+        print('Top Coins - Since ' + str(self.start_time))
         print(self.economydict)
         sorted_token_list = sorted(self.tokendict.items(), key=lambda x: x[1], reverse=True)
-        print('Top Coins - Since bot started')
-        for i in range(20):
-            print(sorted_token_list[i])
+        if len(sorted_token_list) >= 20:
+            for i in range(20):
+                print(sorted_token_list[i])
+        print(' ')
     def print_15mins_list(self):
+        print('Top Coins - Last 15 minutes')
         print(self.quarter_economydict)
         sorted_15min_token_list = sorted(self.token_15mins_dict.items(), key=lambda x: x[1], reverse=True)
-        print('Top Coins - Last 15 minutes')
-        for i in range(20):
-            print(sorted_15min_token_list[i])
+        if len(sorted_15min_token_list) >= 20:
+            for i in range(20):
+                print(sorted_15min_token_list[i])
+        print(' ')
         self.token_15mins_dict = {}
         self.quarter_economydict = {"NFT":0, "DEFI":0, "METAVERSE":0, "POLKADOT":0, "Storage":0, "VR/AR":0}
 
 if __name__ == '__main__':
     botParser = bot()
     start_time = time.time()
-    while((time.time() - start_time) < 28800):
+    #while((time.time() - start_time) < 28800):
+    while(True):
         current_time = time.time()
-        while((time.time() - current_time) < 20):
+        while((time.time() - current_time) < 900):
             #print((time.time() - current_time))
             botParser.loop()
         botParser.print_lists()
