@@ -86,13 +86,14 @@ class bot:
             elif word[0] == '$':
                 word = word[1:]
                 try:
-                    int(word[:-1].replace(',', ''))
+                    float(word[:-1].replace(',', ''))    
                 except ValueError:
                     if word != '': #deal with just $
                         self.tokendict[word.upper()] = self.tokendict.get(word.upper(), 0) +1
                 #print(word)
-            elif word[0] == '(' and word[-1] == ')':
-                word = word[1:-2]
+            elif word[0] == '(' and word[len(word)-1] == ')':
+                #print('There was a )')
+                word = word[1:len(word)-2]
             word.upper()
             economy = self.getFileType(word)
             if economy is not None:
