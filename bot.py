@@ -10,7 +10,9 @@ class bot:
         self.fileTypeDict = {}
         self.initializeFileType()
         self.economydict = {"NFT":0, "DEFI":0, "METAVERSE":0, "POLKADOT":0, "Storage":0, "VR/AR":0}
+        self.quarter_economydict = {"NFT":0, "DEFI":0, "METAVERSE":0, "POLKADOT":0, "Storage":0, "VR/AR":0}
         self.tokendict = {}
+        self.token_15mins_dict = {}
         
 
     def initializeFileType(self):  # Define file types for each file
@@ -90,6 +92,7 @@ class bot:
                 except ValueError:
                     if word != '': #deal with just $
                         self.tokendict[word.upper()] = self.tokendict.get(word.upper(), 0) +1
+                        self.token_15mins_dict[word.upper()] = self.token_15mins_dict.get(word.upper(), 0) +1
                 #print(word)
             elif word[0] == '(' and word[len(word)-1] == ')':
                 #print('There was a )')
@@ -98,6 +101,7 @@ class bot:
             economy = self.getFileType(word)
             if economy is not None:
                 self.economydict[economy] = self.economydict.get(economy) + 1
+                self.quarter_economydict[economy] = self.quarter_economydict.get(economy) + 1
         
 
     def getFileType(self, word):
@@ -123,17 +127,27 @@ class bot:
     def print_lists(self):
         print(self.economydict)
         sorted_token_list = sorted(self.tokendict.items(), key=lambda x: x[1], reverse=True)
+        print('Top Coins - Since bot started')
         for i in range(20):
             print(sorted_token_list[i])
+    def print_15mins_list(self):
+        print(self.quarter_economydict)
+        sorted_15min_token_list = sorted(self.token_15mins_dict.items(), key=lambda x: x[1], reverse=True)
+        print('Top Coins - Last 15 minutes')
+        for i in range(20):
+            print(sorted_15min_token_list[i])
+        self.token_15mins_dict = {}
+        self.quarter_economydict = {"NFT":0, "DEFI":0, "METAVERSE":0, "POLKADOT":0, "Storage":0, "VR/AR":0}
 
 if __name__ == '__main__':
     botParser = bot()
     start_time = time.time()
     while((time.time() - start_time) < 28800):
         current_time = time.time()
-        while((time.time() - current_time) < 900):
+        while((time.time() - current_time) < 20):
             #print((time.time() - current_time))
             botParser.loop()
         botParser.print_lists()
+        botParser.print_15mins_list()
         #print("--- %s seconds ---" % (time.time() - start_time))
         
