@@ -22,12 +22,13 @@ Replace python request in script with code snippet that can be generated in post
 Create a get request using the same request in the script and add your authorization token, then go to code snippet select python- requests and paste the code into the bot. 
 
 ## Startup
-type this in CLI
+Acitvate the environment and then start the script. 
 
 ```shell
 $ venv\Scripts\activate
 $ python bot.py
 ```
+If environment does not start install venv and then pip install requests. 
 
 This script is a POC and I take no responsibility for any finacial decisions made using this script.
 
