@@ -3,6 +3,7 @@ import json
 import time
 from datetime import datetime
 import math
+import csv
 
 
 class bot:
@@ -13,11 +14,35 @@ class bot:
         self.initializeFileType()
         self.economydict = {"NFT":0, "DEFI":0, "METAVERSE":0, "POLKADOT":0, "Storage":0, "VR/AR":0}
         self.quarter_economydict = {"NFT":0, "DEFI":0, "METAVERSE":0, "POLKADOT":0, "Storage":0, "VR/AR":0}
+        self.compared_eco = {"NFT":0, "DEFI":0, "METAVERSE":0, "POLKADOT":0, "Storage":0, "VR/AR":0}
+        self.compared_tokens = {}
         self.tokendict = {}
         self.token_15mins_dict = {}
         self.time = datetime.now()
         self.start_time = self.time.strftime("%H:%M:%S")
+        self.yesterday_economydict, self.yesterday_tokendict = self.previous_data()
         
+    
+    def previous_data(self):
+        d = dict()
+        f = open("yest_eco.csv")
+        for line in f:
+            line = line.strip('/n')
+            (key,val) = line.split(",")
+            d[key] = int(val.strip('/n'))
+        
+        d1 = dict()
+        f = open("yest_tokens.csv")
+        for line in f:
+            line = line.strip("/n")
+            try:
+                (key, val) = line.split(",")
+                d1[key] = int(val.strip('/n'))
+            except:
+                pass
+        
+        return d, d1
+
 
     def initializeFileType(self):  # Define file types for each file
         self.fileTypeDict["THETA"] = "NFT"
@@ -120,8 +145,6 @@ class bot:
 
         payload={}
         headers = {
-        'Authorization': 'insert dev portal code here',
-        'Cookie': 'insert cookie from postman here"'
         }
 
         response = requests.request("GET", url, headers=headers, data=payload)
@@ -172,17 +195,59 @@ class bot:
         print(' ')
         self.token_15mins_dict = {}
         self.quarter_economydict = {"NFT":0, "DEFI":0, "METAVERSE":0, "POLKADOT":0, "Storage":0, "VR/AR":0}
+    
+    def print_compare_yest(self):
+        for key,val in self.yesterday_economydict.items():
+            if val > self.economydict[key]:
+                self.compared_eco[key] = 'Decrease'
+            elif val < self.economydict[key]:
+                self.compared_eco[key] = 'Increase'
+            else:
+                self.compared_eco[key] = 'No Change'
+        
+        print(self.compared_eco)
+
+        for key,val in self.yesterday_tokendict.items():
+            try:
+                if val > self.tokendict[key]:
+                    self.compared_tokens[key] = 'Decrease'
+                elif val < self.tokendict[key]:
+                    self.compared_tokens[key] = 'Increase'
+                else:
+                    self.compared_tokens[key] = 'No Change'
+            except:
+                pass
+        print(self.compared_tokens)
+
+        eco_list = []
+        for key, value in self.economydict.items():
+            eco_list.append([key,value])
+
+        with open('yest_eco.csv', 'w', newline='') as csvfile:
+            csvfile.truncate(0)
+            writer = csv.writer(csvfile)
+            writer.writerows(eco_list)
+            
+        token_list = []
+        for key, value in self.tokendict.items():
+            token_list.append([key,value])
+
+        with open('yest_tokens.csv', 'w', newline='', encoding="utf-8") as csvfile:
+            csvfile.truncate(0)
+            writer = csv.writer(csvfile)
+            writer.writerows(token_list)
 
 if __name__ == '__main__':
     botParser = bot()
     start_time = time.time()
-    #while((time.time() - start_time) < 28800):
-    while(True):
+    #print(botParser.yesterday_economydict, botParser.yesterday_tokendict)
+    while((time.time() - start_time) < 28800):
         current_time = time.time()
         while((time.time() - current_time) < 900):
             #print((time.time() - current_time))
             botParser.loop()
         botParser.print_lists()
         botParser.print_15mins_list()
+    botParser.print_compare_yest()
         #print("--- %s seconds ---" % (time.time() - start_time))
         
