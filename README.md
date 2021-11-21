@@ -28,7 +28,7 @@ Acitvate the environment and then start the script.
 $ venv\Scripts\activate
 $ python bot.py
 ```
-If environment does not start install virtual environment and then pip install requests. 
+If environment does not start pip install virtual environment and then pip install requests. 
 
 This script is a POC and I take no responsibility for any finacial decisions made using this script.
 
