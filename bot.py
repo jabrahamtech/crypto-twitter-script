@@ -2,6 +2,7 @@ import requests
 import json
 import time
 from datetime import datetime
+import math
 
 
 class bot:
@@ -71,12 +72,13 @@ class bot:
         for i in range(100):
             #print(tweets['data'][i]['text'])
             #print(i)
-            if tweets['data'][i]['text'] == self.latestTweetFromPrevious: #breaks loop before repeat tweets
-                break
-            self.checkTweet(tweets['data'][i]['text'])
-
-        self.latestTweetFromPrevious = tweets['data'][0]['text']
-        while((time.time() - s_time) <= 10):
+            try:
+                if tweets['data'][i]['text'] == self.latestTweetFromPrevious: #breaks loop before repeat tweets
+                    break
+                self.checkTweet(tweets['data'][i]['text'])
+            except IndexError:
+                pass
+        while((time.time() - s_time) <= 180):
             pass
 
     def checkTweet(self, tweet):
@@ -118,8 +120,8 @@ class bot:
 
         payload={}
         headers = {
-        'Authorization': 'Bearer AAAAAAAAAAAAAAAAAAAAAE6OVwEAAAAAqn%2BjqKjq%2FwEP9%2F2HhoIk4H3x1Lo%3D0EyYvzqBwNvHmzeVSDU7J51smztAumPb1abYCmPvAtqEpKWv6h',
-        'Cookie': 'guest_id=v1%3A163714639329327069; personalization_id="v1_nuDZwhk7xtxnh6cwX5/4qg=="'
+        'Authorization': 'insert dev portal code here',
+        'Cookie': 'insert cookie from postman here"'
         }
 
         response = requests.request("GET", url, headers=headers, data=payload)
@@ -129,18 +131,43 @@ class bot:
 
     def print_lists(self):
         print('Top Coins - Since ' + str(self.start_time))
-        print(self.economydict)
-        sorted_token_list = sorted(self.tokendict.items(), key=lambda x: x[1], reverse=True)
+
+        values = self.economydict.values()
+        sum_eco = sum(values)
+        economy_dict = self.economydict.copy()
+        if sum_eco > 0:
+            for key in economy_dict:
+                value = economy_dict[key]
+                value = (value/sum_eco) * 100
+                economy_dict[key] = str(int(value)) + '%'
+        print(economy_dict)
+
+        values_token = self.tokendict.values()
+        sum_token = sum(values_token)
+        token_dict = self.tokendict.copy()
+        for key in token_dict:
+            value = token_dict[key]
+            value = (value/sum_token) * 100
+            token_dict[key] = int(value)
+
+        sorted_token_list = sorted(token_dict.items(), key=lambda x: x[1], reverse=True)
         if len(sorted_token_list) >= 20:
             for i in range(20):
-                print(sorted_token_list[i])
+                print(str(sorted_token_list[i][0]) + ': ' + str(sorted_token_list[i][1]) + '%')
         print(' ')
+
     def print_15mins_list(self):
         print('Top Coins - Last 15 minutes')
-        print(self.quarter_economydict)
+        print(self.quarter_economydict)     
         sorted_15min_token_list = sorted(self.token_15mins_dict.items(), key=lambda x: x[1], reverse=True)
         if len(sorted_15min_token_list) >= 20:
             for i in range(20):
+                print(sorted_15min_token_list[i])
+        elif len(sorted_15min_token_list) >= 10:
+            for i in range(10):
+                print(sorted_15min_token_list[i])
+        elif len(sorted_15min_token_list) >= 5:
+            for i in range(5):
                 print(sorted_15min_token_list[i])
         print(' ')
         self.token_15mins_dict = {}
