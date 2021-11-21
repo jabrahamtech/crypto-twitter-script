@@ -21,7 +21,7 @@ Install the latest version of python 3.
 Replace python request in script with code snippet that can be generated in postman for python.
 Create a get request using the same request in the script and add your authorization token, then go to code snippet select python- requests and paste the code into the bot. 
 
-## Startup
+### Startup
 Acitvate the environment and then start the script. 
 
 ```shell
