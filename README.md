@@ -8,9 +8,9 @@ Two list are printed out every 15 minutes to CLI
 
 First list - Set of ecosystems and the percentage at which they have been mentioned against one another since the script started + List of top 20 mentioned tickers and their percentage at which they have been mentioned.
 
-Second list - Same lists at above but for 15 minute interval with number of tweets in the time period
+Second list - Same lists as above but for 15 minute interval with number of tweets in the time period
 
-This script uses ~10% of tweets as a sample size due to twitters developer portal api only allowing 500,000 tweet requests per month. This also requires the script to only be run 8 hours a day. Twitter peak hours are between 3am - 9am NZDT which is also when crypto activity surges. 
+This script uses ~10% of tweets as sample size due to twitters developer portal api only allowing 500,000 tweet requests per month. This also requires the script to only be run 8 hours a day. Twitter peak hours are between 3am - 9am NZDT which is also when crypto activity surges. 
 
 ## Installation
 
