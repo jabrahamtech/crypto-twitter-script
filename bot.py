@@ -20,7 +20,7 @@ class bot:
         self.token_15mins_dict = {}
         self.time = datetime.now()
         self.start_time = self.time.strftime("%H:%M:%S")
-        self.yesterday_economydict, self.yesterday_tokendict = self.previous_data()
+        self.yesterday_economydict = self.previous_data()
         
     
     def previous_data(self):
@@ -31,17 +31,17 @@ class bot:
             (key,val) = line.split(",")
             d[key] = int(val.strip('/n'))
         
-        d1 = dict()
-        f = open("yest_tokens.csv")
-        for line in f:
-            line = line.strip("/n")
-            try:
-                (key, val) = line.split(",")
-                d1[key] = int(val.strip('/n'))
-            except:
-                pass
+        # d1 = dict()
+        # f = open("yest_tokens.csv")
+        # for line in f:
+        #     line = line.strip("/n")
+        #     try:
+        #         (key, val) = line.split(",")
+        #         d1[key] = int(val.strip('/n'))
+        #     except:
+        #         pass
         
-        return d, d1
+        return d
 
 
     def initializeFileType(self):  # Define file types for each file
@@ -145,6 +145,7 @@ class bot:
 
         payload={}
         headers = {
+
         }
 
         response = requests.request("GET", url, headers=headers, data=payload)
@@ -207,17 +208,17 @@ class bot:
         
         print(self.compared_eco)
 
-        for key,val in self.yesterday_tokendict.items():
-            try:
-                if val > self.tokendict[key]:
-                    self.compared_tokens[key] = 'Decrease'
-                elif val < self.tokendict[key]:
-                    self.compared_tokens[key] = 'Increase'
-                else:
-                    self.compared_tokens[key] = 'No Change'
-            except:
-                pass
-        print(self.compared_tokens)
+        # for key,val in self.yesterday_tokendict.items():
+        #     try:
+        #         if val > self.tokendict[key]:
+        #             self.compared_tokens[key] = 'Decrease'
+        #         elif val < self.tokendict[key]:
+        #             self.compared_tokens[key] = 'Increase'
+        #         else:
+        #             self.compared_tokens[key] = 'No Change'
+        #     except:
+        #         pass
+        # print(self.compared_tokens)
 
         eco_list = []
         for key, value in self.economydict.items():
@@ -228,14 +229,14 @@ class bot:
             writer = csv.writer(csvfile)
             writer.writerows(eco_list)
             
-        token_list = []
-        for key, value in self.tokendict.items():
-            token_list.append([key,value])
+        # token_list = []
+        # for key, value in self.tokendict.items():
+        #     token_list.append([key,value])
 
-        with open('yest_tokens.csv', 'w', newline='', encoding="utf-8") as csvfile:
-            csvfile.truncate(0)
-            writer = csv.writer(csvfile)
-            writer.writerows(token_list)
+        # with open('yest_tokens.csv', 'w', newline='', encoding="utf-8") as csvfile:
+        #     csvfile.truncate(0)
+        #     writer = csv.writer(csvfile)
+        #     writer.writerows(token_list)
 
 if __name__ == '__main__':
     botParser = bot()
