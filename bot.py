@@ -145,7 +145,8 @@ class bot:
 
         payload={}
         headers = {
-
+        'Authorization': 'Bearer AAAAAAAAAAAAAAAAAAAAAFTTVwEAAAAAxpYetwxazajDCsQe090pxNiPeXs%3DM2oMsPiryKj2skzkZT0hKcVThYR9QnTEELRcxJYKzpolIWXagb',
+        'Cookie': 'guest_id=v1%3A163714639329327069; personalization_id="v1_nuDZwhk7xtxnh6cwX5/4qg=="'
         }
 
         response = requests.request("GET", url, headers=headers, data=payload)
