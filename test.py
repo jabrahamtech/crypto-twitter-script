@@ -82,7 +82,10 @@ from urllib.request import urlopen
 from bs4 import BeautifulSoup
 import time
 
-url = "https://api.coinmarketcap.com/data-api/v3/map/all?listing_status=active,untracked&exchangeAux=is_active,status&cryptoAux=is_active,status&start=1&limit=1000"
+
+
+
+url = "https://api.coinmarketcap.com/data-api/v3/map/all?listing_status=active,untracked&exchangeAux=is_active,status&cryptoAux=is_active,status&start=1&limit=300"
 
 payload={}
 headers = {}
@@ -124,7 +127,7 @@ def check_volume_ratio(coin):
 
 times = 0
 
-for i in range(1000):
+for i in range(300):
   #print(crypto_list['data']['cryptoCurrencyMap'][i]['name'])
   times += 1
   if times == 10:
